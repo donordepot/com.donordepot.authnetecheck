@@ -42,6 +42,43 @@ class CRM_Core_Payment_AuthNetEcheck extends CRM_Core_Payment_AuthorizeNet {
       return self::$_singleton[$processorName];
   }
 
+  /**
+   * Submit an Automated Recurring Billing subscription
+   *
+   * @public
+   */
+  function doRecurPayment() {
+
+    $template = CRM_Core_Smarty::singleton();
+
+    $template->assign('paymentType', $this->_getParam('paymentType'));
+    $template->assign('accountType', $this->_getParam('bank_account_type'));
+    $template->assign('routingNumber', $this->_getParam('bank_identification_number'));
+    $template->assign('accountNumber', $this->_getParam('bank_account_number'));
+    $template->assign('nameOnAccount', $this->_getParam('account_holder'));
+    $template->assign('echeckType', 'WEB');
+    $template->assign('bankName', $this->_getParam('bank_name'));
+
+    return parent::doRecurPayment();
+
+  }
+
+  function updateSubscriptionBillingInfo(&$message = '', $params = array()) {
+
+    $template = CRM_Core_Smarty::singleton();
+
+    $template->assign('paymentType', $this->_getParam('paymentType'));
+    $template->assign('accountType', $params['bank_account_type']);
+    $template->assign('routingNumber', $params['bank_identification_number']);
+    $template->assign('accountNumber', $params['bank_account_number']);
+    $template->assign('nameOnAccount', $params['account_holder']);
+    $template->assign('echeckType', 'WEB');
+    $template->assign('bankName', $params['bank_name']);
+
+    return parent::updateSubscriptionBillingInfo($message, $params);
+
+  }
+
   function _getAuthorizeNetFields() {
       $fields = parent::_getAuthorizeNetFields();
 
@@ -62,5 +99,6 @@ class CRM_Core_Payment_AuthNetEcheck extends CRM_Core_Payment_AuthorizeNet {
 
       return $fields;
   }
+
 
 }

@@ -42,10 +42,21 @@
   <subscriptionId>{$subscriptionId}</subscriptionId>
   <subscription>
     <payment>
-      <creditCard>
-        <cardNumber>{$cardNumber}</cardNumber>
-        <expirationDate>{$expirationDate}</expirationDate>
-      </creditCard>
+      {if $paymentType == 'ECHECK'}
+        <bankAccount>
+          <accountType>{$accountType}</accountType>
+          <routingNumber>{$routingNumber}</routingNumber>
+          <accountNumber>{$accountNumber}</accountNumber>
+          <nameOnAccount>{$nameOnAccount}</nameOnAccount>
+          <echeckType>{$echeckType}</echeckType>
+          <bankName>{$bankName}</bankName>
+        </bankAccount>
+      {else}
+        <creditCard>
+          <cardNumber>{$cardNumber}</cardNumber>
+          <expirationDate>{$expirationDate}</expirationDate>
+        </creditCard>
+      {/if}
     </payment>
     <billTo>
       <firstName>{$billingFirstName}</firstName>
@@ -92,18 +103,29 @@
       <totalOccurrences>{$totalOccurrences}</totalOccurrences>
     </paymentSchedule>
     <amount>{$amount}</amount>
-    <payment>
-      <creditCard>
-        <cardNumber>{$cardNumber}</cardNumber>
-        <expirationDate>{$expirationDate}</expirationDate>
-      </creditCard>
-    </payment>
+    {if $paymentType == 'ECHECK'}
+      <bankAccount>
+        <accountType>{$accountType}</accountType>
+        <routingNumber>{$routingNumber}</routingNumber>
+        <accountNumber>{$accountNumber}</accountNumber>
+        <nameOnAccount>{$nameOnAccount}</nameOnAccount>
+        <echeckType>{$echeckType}</echeckType>
+        <bankName>{$bankName}</bankName>
+      </bankAccount>
+    {else}
+      <payment>
+        <creditCard>
+          <cardNumber>{$cardNumber}</cardNumber>
+          <expirationDate>{$expirationDate}</expirationDate>
+        </creditCard>
+      </payment>
+    {/if}
    {if $invoiceNumber}
-   <order>  
+   <order>
      <invoiceNumber>{$invoiceNumber}</invoiceNumber>
      {if $name}<description>{$name}</description>{/if}
    </order>
-   {/if}  
+   {/if}
     <customer>
       <id>{$contactID}</id>
       <email>{$email}</email>
