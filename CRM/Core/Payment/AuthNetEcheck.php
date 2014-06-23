@@ -20,6 +20,7 @@ class CRM_Core_Payment_AuthNetEcheck extends CRM_Core_Payment_AuthorizeNet {
    */
   function __construct($mode, &$paymentProcessor) {
       parent::__construct($mode, $paymentProcessor);
+      $this->_setParam('paymentType', 'ECHECK');
       $this->_processorName = ts('Authorize.net eCheck.net');
   }
 
@@ -44,13 +45,20 @@ class CRM_Core_Payment_AuthNetEcheck extends CRM_Core_Payment_AuthorizeNet {
   function _getAuthorizeNetFields() {
       $fields = parent::_getAuthorizeNetFields();
 
-      $fields['x_method'] = 'ECHECK';
+      $fields['x_method'] = $this->_getParam('paymentType');
       $fields['x_bank_aba_code'] = $this->_getParam('bank_identification_number');
-      // $fields['x_bank_acct_type'] = '';
+      $fields['x_bank_acct_num'] = $this->_getParam('bank_account_number');
+      $fields['x_bank_acct_type'] = strtoupper($this->_getParam('bank_account_type'));
       $fields['x_bank_name'] = $this->_getParam('bank_name');
       $fields['x_bank_acct_name'] = $this->_getParam('account_holder');
       $fields['x_echeck_type'] = 'WEB';
-      $fields['x_relay_response'] = 'false';
+
+      $fields['x_relay_response'] = 'FALSE';
+
+      // request response in CSV format
+      $fields['x_delim_data'] = 'TRUE';
+      $fields['x_delim_char'] = ',';
+      $fields['x_encap_char'] = '"';
 
       return $fields;
   }

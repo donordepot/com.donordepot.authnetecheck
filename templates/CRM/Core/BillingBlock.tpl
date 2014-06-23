@@ -71,6 +71,11 @@
                             <div class="content">{$form.bank_name.html}</div>
                             <div class="clear"></div>
                         </div>
+                        <div class="crm-section {$form.bank_account_type.name}-section">
+              <div class="label">{$form.bank_account_type.label}</div>
+                            <div class="content">{$form.bank_account_type.html}</div>
+                            <div class="clear"></div>
+                        </div>
                    {else}
                 		<div class="crm-section {$form.credit_card_type.name}-section">
 							<div class="label">{$form.credit_card_type.label}</div>
@@ -197,14 +202,14 @@ function sameAddress( setValue ) {
       }
       cj(this).val( cj('#' + fieldName ).val() );
     });
-    
+
     var stateId;
     cj('.billing_name_address-section select').each( function( i ){
       orgID = cj(this).attr('id');
       field = orgID.split('-');
       fieldName = field[0].replace('billing_', '');
       fieldNameBase = fieldName.replace('_id', '');
-      if ( field[1] ) { 
+      if ( field[1] ) {
         // this means it is an address field
         if ( addressFields[fieldNameBase] ) {
           fieldName =  fieldNameBase + '-' + addressFields[fieldNameBase];
@@ -217,7 +222,7 @@ function sameAddress( setValue ) {
         stateId = cj('#' + fieldName ).val();
       }
       else {
-        cj(this).val( cj('#' + fieldName ).val() ).change( );   
+        cj(this).val( cj('#' + fieldName ).val() ).change( );
       }
     });
 
@@ -227,7 +232,7 @@ function sameAddress( setValue ) {
       cj('select[id^="billing_state_province_id"]').ajaxStop(function() {
         cj( 'select[id^="billing_state_province_id"]').val( stateId );
       });
-    }  
+    }
   }
 }
 {/literal}

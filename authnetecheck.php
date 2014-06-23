@@ -2,6 +2,79 @@
 
 require_once 'authnetecheck.civix.php';
 
+
+/**
+ * Implementation of hook_civicrm_buildForm
+ */
+function authnetecheck_civicrm_buildForm($formName, &$form) {
+
+  // If the form does not have payment fields, return.
+  if (empty($form->_paymentFields)) {
+    return;
+  }
+
+  // Loop through the fields to make changes.
+  $changed = 0;
+  foreach ($form->_elements as $key => &$element) {
+
+    // Stop the loop if everything is done.
+    if ($changed == 3) {
+      break;
+    }
+
+    // If there is no "name" attribute, continue.
+    if (empty($element->_attributes['name'])) {
+      continue;
+    }
+
+    // Change the label based on the name of the field.
+    if ($element->_attributes['name'] == 'bank_identification_number') {
+
+      $element->_label = ts('Routing Number');
+      $changed++;
+
+    }
+    else if ($element->_attributes['name'] == 'account_holder') {
+
+      $element->_label = ts('Name on Account');
+      $changed++;
+
+    }
+    else if ($element->_attributes['name'] == 'bank_account_number') {
+
+      $element->_label = ts('Account Number');
+      $changed++;
+
+    }
+
+  }
+
+  // Build the Account Type Field.
+  $form->_paymentFields['bank_account_type'] = array(
+    'htmlType' => 'select',
+    'name' => 'bank_account_type',
+    'title' => ts('Account Type'),
+    'cc_field' => TRUE,
+    'attributes' => array(
+      '' => ts('- select -'),
+      'checking' => ts('Checking'),
+      'businesschecking' => ts('Business Checking'),
+      'savings' => ts('Savings'),
+    ),
+    'is_required' => TRUE,
+  );
+
+  // Add the Account Type Drop-Down
+  $field = $form->_paymentFields['bank_account_type'];
+  $form->add($field['htmlType'],
+    $field['name'],
+    $field['title'],
+    $field['attributes'],
+    $useRequired ? $field['is_required'] : FALSE
+  );
+
+}
+
 /**
  * Implementation of hook_civicrm_config
  *
