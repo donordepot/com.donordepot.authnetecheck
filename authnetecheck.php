@@ -61,16 +61,17 @@ function authnetecheck_civicrm_buildForm($formName, &$form) {
       'businesschecking' => ts('Business Checking'),
       'savings' => ts('Savings'),
     ),
-    'is_required' => TRUE,
+    'is_required' => FALSE,
   );
 
   // Add the Account Type Drop-Down
   $field = $form->_paymentFields['bank_account_type'];
-  $form->add($field['htmlType'],
+  $form->add(
+    $field['htmlType'],
     $field['name'],
     $field['title'],
     $field['attributes'],
-    $useRequired ? $field['is_required'] : FALSE
+    $field['is_required']
   );
 
 }

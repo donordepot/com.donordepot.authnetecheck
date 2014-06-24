@@ -103,23 +103,23 @@
       <totalOccurrences>{$totalOccurrences}</totalOccurrences>
     </paymentSchedule>
     <amount>{$amount}</amount>
-    {if $paymentType == 'ECHECK'}
-      <bankAccount>
-        <accountType>{$accountType}</accountType>
-        <routingNumber>{$routingNumber}</routingNumber>
-        <accountNumber>{$accountNumber}</accountNumber>
-        <nameOnAccount>{$nameOnAccount}</nameOnAccount>
-        <echeckType>{$echeckType}</echeckType>
-        <bankName>{$bankName}</bankName>
-      </bankAccount>
-    {else}
-      <payment>
+    <payment>
+      {if $paymentType == 'ECHECK'}
+        <bankAccount>
+          <accountType>{$accountType}</accountType>
+          <routingNumber>{$routingNumber}</routingNumber>
+          <accountNumber>{$accountNumber}</accountNumber>
+          <nameOnAccount>{$nameOnAccount}</nameOnAccount>
+          <echeckType>{$echeckType}</echeckType>
+          <bankName>{$bankName}</bankName>
+        </bankAccount>
+      {else}
         <creditCard>
           <cardNumber>{$cardNumber}</cardNumber>
           <expirationDate>{$expirationDate}</expirationDate>
         </creditCard>
-      </payment>
-    {/if}
+      {/if}
+    </payment>
    {if $invoiceNumber}
    <order>
      <invoiceNumber>{$invoiceNumber}</invoiceNumber>
