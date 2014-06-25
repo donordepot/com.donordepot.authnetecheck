@@ -43,6 +43,76 @@ class CRM_Core_Payment_AuthNetEcheck extends CRM_Core_Payment_AuthorizeNet {
   }
 
   /**
+   * Submit a payment using Advanced Integration Method
+   *
+   * @param  array $params assoc array of input parameters for this transaction
+   *
+   * @return array the result in a nice formatted array (or an error object)
+   * @public
+   */
+  function doDirectPayment(&$params) {
+
+      $params = parent::doDirectPayment($params);
+
+      // Fix the Payment Instrument on the Contribution.
+      if (CRM_Utils_Array::value('contributionID', $params)) {
+
+        $contribution = new CRM_Contribute_BAO_Contribution();
+        $contribution->id = $params['contributionID'];
+
+        if ($contribution->find(TRUE)) {
+
+          $dateFields = array(
+            'receive_date',
+            'cancel_date',
+            'receipt_date',
+            'thankyou_date'
+          );
+          $this->fixDates($contribution, $dateFields);
+
+          // Change the Payment Instrument ID.
+          $contribution->payment_instrument_id = 5; // EFT
+
+          // Save the Contribution.
+          $contribution->save();
+
+        }
+
+      }
+
+      // Fix the Payment Instrument on the Recurring Contribution.
+      if (CRM_Utils_Array::value('contributionRecurID', $params)) {
+
+        $contribution = new CRM_Contribute_BAO_ContributionRecur();
+        $contribution->id = $params['contributionRecurID'];
+
+        if ($contribution->find(TRUE)) {
+
+          $dateFields = array(
+            'start_date',
+            'create_date',
+            'modified_date',
+            'cancel_date',
+            'end_date',
+            'next_sched_contribution',
+            'failure_retry_date',
+          );
+          $this->fixDates($contribution, $dateFields);
+
+          // Change the Payment Instrument ID.
+          $contribution->payment_instrument_id = 5; // EFT
+
+          // Save the Contribution.
+          $contribution->save();
+        }
+
+      }
+
+      return $params;
+
+  }
+
+  /**
    * Submit an Automated Recurring Billing subscription
    *
    * @public
@@ -98,6 +168,23 @@ class CRM_Core_Payment_AuthNetEcheck extends CRM_Core_Payment_AuthorizeNet {
       $fields['x_encap_char'] = '"';
 
       return $fields;
+  }
+
+  /*
+   * A cludgy hack to fix the dates to MySQL format.
+   */
+  private function fixDates(&$contribution, $dateFields) {
+
+      foreach ($dateFields as $df) {
+
+        if (!isset($contribution->{$df})) {
+          continue;
+        }
+
+        $contribution->{$df} = CRM_Utils_Date::isoToMysql($contribution->{$df});
+
+      }
+
   }
 
 
