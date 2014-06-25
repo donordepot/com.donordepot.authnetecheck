@@ -1,7 +1,7 @@
 CiviCRM Authorize.Net eCheck.Net
 ==============================
 
-CiviCRM Extension that provides support for Autheorize.Net's eCheck.Net
+CiviCRM Extension that provides support for Authorize.Net's eCheck.Net
 
 Features
 --------
