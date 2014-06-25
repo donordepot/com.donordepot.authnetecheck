@@ -1,7 +1,12 @@
 CiviCRM Authorize.Net eCheck.Net
 ==============================
 
-CiviCRM Extension that provides a support for Autheorize.Net's eCheck.Net
+CiviCRM Extension that provides support for Autheorize.Net's eCheck.Net
+
+Features
+--------
+* Provides a New Payment Processor for eCheck.Net based on Authorize.Net API (AIM Method)
+* Supports Recurring Contributions using Authorize.Net Automated Recurring Billing (ARB)
 
 Requirements
 ------------
@@ -18,12 +23,6 @@ This directory and be set at: http://example.com/civicrm/admin/setting/path?rese
 3. Install the "Authorize.Net eCheck.Net" Extension
 
 4. Add a New Payment Processor by going to: http://example.com/civicrm/admin/paymentProcessor?reset=1
-
-
-Usage
------
-* Provides a New Payment Processor for eCheck.Net based on Authorize.Net API (AIM Method)
-* Supports Recurring Contributions using Authorize.Net Automated Recurring Billing (ARB)
 
 License
 -------
