@@ -120,7 +120,47 @@ function authnetecheck_civicrm_uninstall() {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
 function authnetecheck_civicrm_enable() {
+
+  // See if there is an Existing 'EFT' Payment Instrument.
+  $value = new CRM_Core_DAO_OptionValue();
+  $value->option_group_id = 10;
+  $value->name = 'EFT';
+
+  // If one exists, set it to reserved so it cannot be disabled nor deleted.
+  if ($value->find(TRUE)) {
+    $value->is_active = TRUE;
+    $value->is_reserved = TRUE;
+    $value->save();
+  }
+  else {
+
+    // Since a 'EFT' Payment Instrument no longer exists, Create one.
+    $params = array(
+      'option_group_id' => 10,
+      'label' => 'EFT',
+      'name' => 'EFT',
+      'is_reserved' => TRUE,
+      'is_active' => TRUE,
+    );
+
+    // Set the Group ID.
+    $groupParams = array(
+      'id' => 10,
+    );
+
+    // The Action on the value is to add +1 to the highest value.
+    $action = CRM_Core_Action::ADD;
+
+    // Creating a new value, so this can be 0.
+    $optionValueID = 0;
+
+    // Save the new Option Value.
+    CRM_Core_OptionValue::addOptionValue($params, $groupParams, $action, $optionValueID);
+
+  }
+
   return _authnetecheck_civix_civicrm_enable();
+
 }
 
 /**
@@ -129,7 +169,21 @@ function authnetecheck_civicrm_enable() {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_disable
  */
 function authnetecheck_civicrm_disable() {
+
+  // Find the Existing 'EFT' Payment Instrument.
+  $value = new CRM_Core_DAO_OptionValue();
+  $value->option_group_id = 10;
+  $value->name = 'EFT';
+
+  // If a Payment Instrument can be found,
+  // remove the reserved option.
+  if ($value->find(TRUE)) {
+    $value->is_reserved = FALSE;
+    $value->save();
+  }
+
   return _authnetecheck_civix_civicrm_disable();
+
 }
 
 /**

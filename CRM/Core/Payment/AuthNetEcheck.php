@@ -71,7 +71,9 @@ class CRM_Core_Payment_AuthNetEcheck extends CRM_Core_Payment_AuthorizeNet {
           $this->fixDates($contribution, $dateFields);
 
           // Change the Payment Instrument ID.
-          $contribution->payment_instrument_id = 5; // EFT
+          $option_group = new CRM_Core_OptionGroup();
+          $instrument = $option_group->getValue('payment_instrument', 'EFT', 'name');
+          $contribution->payment_instrument_id = $instrument;
 
           // Save the Contribution.
           $contribution->save();
@@ -100,7 +102,8 @@ class CRM_Core_Payment_AuthNetEcheck extends CRM_Core_Payment_AuthorizeNet {
           $this->fixDates($contribution, $dateFields);
 
           // Change the Payment Instrument ID.
-          $contribution->payment_instrument_id = 5; // EFT
+          $instrument = CRM_Core_OptionGroup::getValue('payment_instrument', 'EFT', 'name');
+          $contribution->payment_instrument_id = $instrument;
 
           // Save the Contribution.
           $contribution->save();
