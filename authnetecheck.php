@@ -213,7 +213,7 @@ function authnetecheck_civicrm_managed(&$entities) {
 
   $entities[] = array(
     'module' => 'com.donordepot.authnetecheck',
-    'name' => 'Authorize.net eCheck.Net',
+    'name' => 'Authorize.Net eCheck.Net',
     'entity' => 'PaymentProcessorType',
     'params' => array(
       'version' => 3,

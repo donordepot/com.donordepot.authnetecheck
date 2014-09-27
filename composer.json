@@ -2,7 +2,7 @@
   "name": "donordepot/civicrm-authorize-echeck",
   "description": "CiviCRM Authorize.Net eCheck.Net Extension",
   "type": "civicrm-extension",
-  "license": "AGPL-3.0",
+  "license": "GPL-3.0",
   "support": {
     "email": "support@donordepot.com",
     "issues": "https://github.com/donordepot/com.donordepot.authnetecheck/issues"
