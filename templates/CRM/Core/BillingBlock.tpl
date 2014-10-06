@@ -28,7 +28,7 @@
     <div id="payment_information">
         <fieldset class="billing_mode-group {if $paymentProcessor.payment_type & 2}direct_debit_info-group{else}credit_card_info-group{/if}">
             <legend>
-               {if $paymentProcessor.payment_type & 2}
+               {if $paymentProcessor.payment_type == 2 and $form.formName != 'Contribution'}
                     {ts}Direct Debit Information{/ts}
                {else}
                    {ts}Credit Card Information{/ts}
