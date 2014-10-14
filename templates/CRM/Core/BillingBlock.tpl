@@ -28,7 +28,7 @@
     <div id="payment_information">
         <fieldset class="billing_mode-group {if $paymentProcessor.payment_type & 2}direct_debit_info-group{else}credit_card_info-group{/if}">
             <legend>
-               {if $paymentProcessor.payment_type == 2 and $form.formName != 'Contribution'}
+               {if $paymentProcessor.payment_type == 2}
                     {ts}Direct Debit Information{/ts}
                {else}
                    {ts}Credit Card Information{/ts}
@@ -50,7 +50,7 @@
 
             {if $paymentProcessor.billing_mode & 1}
                 <div class="crm-section billing_mode-section {if $paymentProcessor.payment_type & 2}direct_debit_info-section{else}credit_card_info-section{/if}">
-                   {if $paymentProcessor.payment_type == 2 and $form.formName != 'Contribution'}
+                   {if $paymentProcessor.payment_type == 2}
                         <div class="crm-section {$form.account_holder.name}-section">
 							<div class="label">{$form.account_holder.label}</div>
                             <div class="content">{$form.account_holder.html}</div>
