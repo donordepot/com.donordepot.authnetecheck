@@ -26,4 +26,4 @@ This directory and be set at: http://example.com/civicrm/admin/setting/path?rese
 
 License
 -------
-This software is licensed under the GNU Affero General Public License 3 (GNU AGPL 3)
+This software is licensed under the GNU General Public License 3 (GNU GPL 3)

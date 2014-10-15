@@ -13,40 +13,154 @@ function authnetecheck_civicrm_buildForm($formName, &$form) {
     return;
   }
 
-  // Loop through the fields to make changes.
-  $changed = 0;
-  foreach ($form->_elements as $key => &$element) {
+  // Backoffice Contribution Form.
+  if ($formName == 'CRM_Contribute_Form_Contribution') {
 
-    // Stop the loop if everything is done.
-    if ($changed == 3) {
-      break;
-    }
+    // Loop through all payment processors.
+    foreach ($form->_processors as $ppID => $label) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $form->_mode);
 
-    // If there is no "name" attribute, continue.
-    if (empty($element->_attributes['name'])) {
-      continue;
-    }
-
-    // Change the label based on the name of the field.
-    if ($element->_attributes['name'] == 'bank_identification_number') {
-
-      $element->_label = ts('Routing Number');
-      $changed++;
-
-    }
-    else if ($element->_attributes['name'] == 'account_holder') {
-
-      $element->_label = ts('Name on Account');
-      $changed++;
-
-    }
-    else if ($element->_attributes['name'] == 'bank_account_number') {
-
-      $element->_label = ts('Account Number');
-      $changed++;
+      // payment fields are depending on payment type
+      if (CRM_Utils_Array::value('payment_type', $paymentProcessor) & CRM_Core_Payment::PAYMENT_TYPE_DIRECT_DEBIT) {
+        CRM_Core_Payment_Form::setDirectDebitFields($form);
+      }
 
     }
 
+    // Add the Direct Debit Fields.
+    $form->add('hidden', 'hidden_DirectDebit', 1);
+    CRM_Core_Payment_Form::buildDirectDebit($form, TRUE);
+
+    // If a payment_processor_id is provided:
+    if (!empty($_REQUEST['payment_processor_id']) && is_numeric($_REQUEST['payment_processor_id'])) {
+
+        $payment_processor_id = $_REQUEST['payment_processor_id'];
+
+      // If a mode is provided.
+      if (!empty($_REQUEST['mode'])) {
+
+        $form->_mode = $_REQUEST['mode'];
+
+      }
+
+      // Get the payment processor.
+      $form->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($payment_processor_id, $form->_mode);
+
+    }
+
+    // Assign the payment processor to the template.
+    $form->assign_by_ref('paymentProcessor', $form->_paymentProcessor);
+
+    // If a payment type has been set:
+    if (isset($form->_paymentProcessor['payment_type'])) {
+
+      $required = 0;
+      $not_required = 0;
+
+      // Fields for each payment type.
+      $fields = array(
+        1 => array(
+          'credit_card_type',
+          'credit_card_number',
+          'cvv2',
+          'credit_card_exp_date',
+        ),
+        2 => array(
+          'account_holder',
+          'bank_account_number',
+          'bank_identification_number',
+          'bank_name',
+          'bank_account_type',
+        ),
+      );
+
+      // Depending on the payment type, the opposite type should not be required.
+      if ($form->_paymentProcessor['payment_type'] == 1) {
+
+        $required = 1;
+        $not_required = 2;
+
+      }
+      else if ($form->_paymentProcessor['payment_type'] == 2) {
+
+        $required = 2;
+        $not_required = 1;
+
+      }
+
+      // Set the Required Fields.
+      if ($required) {
+
+        foreach ($fields[$required] as $name) {
+
+          if (isset($form->_elementIndex[$name])) {
+
+            $index = $form->_elementIndex[$name];
+            $element = $form->_elements[$index];
+
+            $message = ts('%1 is a required field.', array(1 => $element->_label));
+
+            $form->addRule($name, $message, 'required');
+
+          }
+
+
+        }
+
+      }
+
+      // Unset the not required fields.
+      if ($not_required) {
+
+        foreach ($fields[$not_required] as $name) {
+
+          while (array_search($name, $form->_required) !== FALSE) {
+
+            $index = array_search($name, $form->_required);
+
+            unset($form->_required[$index]);
+
+          }
+
+          if (isset($form->_rules[$name])) {
+
+            foreach ($form->_rules[$name] as $index => $rule) {
+
+              if (isset($rule['type']) && $rule['type'] == 'required') {
+                unset($form->_rules[$name][$index]);
+              }
+
+
+            }
+
+            // print '<pre>'.print_r($form->_rules[$name], TRUE).'</pre>';
+
+          }
+
+
+        }
+
+      }
+
+    }
+
+  }
+
+
+  // Change the label based on the name of the field.
+  if (isset($form->_elementIndex['bank_identification_number'])) {
+    $index = $form->_elementIndex['bank_identification_number'];
+    $form->_elements[$index]->_label = ts('Routing Number');
+  }
+
+  if (isset($form->_elementIndex['account_holder'])) {
+    $index = $form->_elementIndex['account_holder'];
+    $form->_elements[$index]->_label = ts('Name on Account');
+  }
+
+  if (isset($form->_elementIndex['bank_account_number'])) {
+    $index = $form->_elementIndex['bank_account_number'];
+    $form->_elements[$index]->_label = ts('Account Number');
   }
 
   // Build the Account Type Field.
@@ -82,6 +196,11 @@ function authnetecheck_civicrm_buildForm($formName, &$form) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
 function authnetecheck_civicrm_config(&$config) {
+
+  if (!isset($config->defaultContactStateProvince)) {
+    $config->defaultContactStateProvince = '';
+  }
+
   _authnetecheck_civix_civicrm_config($config);
 }
 
