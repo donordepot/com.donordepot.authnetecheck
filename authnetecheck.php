@@ -196,6 +196,11 @@ function authnetecheck_civicrm_buildForm($formName, &$form) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
 function authnetecheck_civicrm_config(&$config) {
+
+  if (!isset($config->defaultContactStateProvince)) {
+    $config->defaultContactStateProvince = '';
+  }
+
   _authnetecheck_civix_civicrm_config($config);
 }
 
