@@ -19,7 +19,7 @@ function authnetecheck_civicrm_buildForm($formName, &$form) {
   );
 
   // Backoffice Contribution Form.
-  if (in_array($formName, $forms)) {
+  if (in_array($formName, $forms) && !empty($form->_mode) && !empty($form->_processors)) {
 
     // Loop through all payment processors.
     foreach ($form->_processors as $ppID => $label) {
