@@ -13,6 +13,22 @@ function authnetecheck_civicrm_buildForm($formName, &$form) {
     return;
   }
   
+  // Change the label based on the name of the field.
+  if (isset($form->_elementIndex['bank_identification_number'])) {
+    $index = $form->_elementIndex['bank_identification_number'];
+    $form->_elements[$index]->_label = ts('Routing Number');
+  }
+
+  if (isset($form->_elementIndex['account_holder'])) {
+    $index = $form->_elementIndex['account_holder'];
+    $form->_elements[$index]->_label = ts('Name on Account');
+  }
+
+  if (isset($form->_elementIndex['bank_account_number'])) {
+    $index = $form->_elementIndex['bank_account_number'];
+    $form->_elements[$index]->_label = ts('Account Number');
+  }
+  
 }
 
 /**
