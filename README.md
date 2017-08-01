@@ -11,7 +11,7 @@ Features
 Requirements
 ------------
 
- * CiviCRM 4.2+
+ * CiviCRM 4.6+
 
 Installation
 ------------
