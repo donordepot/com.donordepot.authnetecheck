@@ -167,32 +167,6 @@ function authnetecheck_civicrm_buildForm($formName, &$form) {
     $index = $form->_elementIndex['bank_account_number'];
     $form->_elements[$index]->_label = ts('Account Number');
   }
-
-  // Build the Account Type Field.
-  $form->_paymentFields['bank_account_type'] = array(
-    'htmlType' => 'select',
-    'name' => 'bank_account_type',
-    'title' => ts('Account Type'),
-    'cc_field' => TRUE,
-    'attributes' => array(
-      '' => ts('- select -'),
-      'checking' => ts('Checking'),
-      'businesschecking' => ts('Business Checking'),
-      'savings' => ts('Savings'),
-    ),
-    'is_required' => FALSE,
-  );
-
-  // Add the Account Type Drop-Down
-  $field = $form->_paymentFields['bank_account_type'];
-  $form->add(
-    $field['htmlType'],
-    $field['name'],
-    $field['title'],
-    $field['attributes'],
-    $field['is_required']
-  );
-
 }
 
 /**
